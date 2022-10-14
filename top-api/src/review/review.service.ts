@@ -25,4 +25,3 @@ export class ReviewService {
     return this.reviewModel.deleteMany({ productId: new Types.ObjectId(productId) }).exec()
   }
 }
-
