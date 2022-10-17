@@ -3,7 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { CreateReviewDto } from 'src/review/dto/create-review.dto';
-import { Types } from 'mongoose';
+import { Types, disconnect, connection } from 'mongoose';
 
 const productId = new Types.ObjectId().toHexString()
 
@@ -29,14 +29,30 @@ describe('AppController (e2e)', () => {
   });
 
   it('/review/create (POST)', async (done) => {
-    return request(app.getHttpServer())
-      .post('/review/create')
-      .send(testDto)
-      .expect(201)
-      .then(({ body }: request.Response) => {
-        createdId = body._id;
-        expect(createdId).toBeDefined();
-        done()
-      });
+    const res = await request(app.getHttpServer()).post('/review/create').send(testDto).then(({ body }: request.Response) => {
+      console.log('body: ', body);
+      createdId = body._id;
+      console.log('createdId: ', createdId);
+      return createdId
+      // expect(createdId).toBeDefined();
+    })
+    console.log('res: ', res);
+    expect(res).toBeDefined();
+    // done()
+    // expect(res).toBe()
+    // return request(app.getHttpServer())
+    //   .post('/review/create')
+    //   .send(testDto)
+    //   .expect(201)
+    //   .then(({ body }: request.Response) => {
+    //     createdId = body._id;
+    //     console.log('createdId: ', createdId);
+    //     expect(createdId).toBeDefined();
+    //   })
   });
+
+  afterAll(async () => {
+    disconnect()
+  })
+
 });
