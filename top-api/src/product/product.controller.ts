@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { FindProductDto } from './dto/find-product.dto';
 import { PRODUCT_NOT_FOUND_ERROR } from './product.constants';
@@ -40,9 +40,10 @@ export class ProductController {
     return updatedProduct
   }
 
+  @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  @Post()
+  @Post('find')
   async find(@Body() dto: FindProductDto) {
-
+return this.productService.findWithReviews(dto)
   }
 }
